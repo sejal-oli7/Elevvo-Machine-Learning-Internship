@@ -22,6 +22,13 @@ using the Student Performance Factors dataset (6,607 students, 20 columns).
 | 5-fold CV R2 | 0.7376 (+/- 0.10) |
 | Test R2 (rows with score < 80) | 0.9862 |
 
+### Bonus
+- **Feature combinations:** Hours_Studied alone gives R2 0.23. With Attendance it
+  rises to 0.59, and with all features to 0.77 (MAE 2.45 to 0.44). Sleep_Hours,
+  Gender and School_Type have no effect on the score.
+- **Polynomial regression:** Degrees 1-4 gave no improvement (R2 stays 0.23 on
+  Hours_Studied only). The relationship is linear, so Linear Regression is used.
+
 Attendance and Hours_Studied are the most important features.
 Seven high-score students (80-98) in the test set were predicted poorly
 and account for most of the error. Their features look ordinary, so these
