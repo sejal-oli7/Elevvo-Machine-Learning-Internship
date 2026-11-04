@@ -80,7 +80,7 @@ Mall Customer Segmentation (Kaggle): https://www.kaggle.com/datasets/vjchoudhary
 
 ---
 
-## Task 4: Loan Approval Prediction
+## Task 3: Loan Approval Prediction
 
 Predict whether a loan application will be approved using the Loan Approval Prediction dataset (4,269 applications, 13 columns).
 
