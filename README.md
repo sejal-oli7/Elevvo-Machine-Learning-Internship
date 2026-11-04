@@ -118,3 +118,60 @@ Open `Loan_Approval_Prediction.ipynb` in Google Colab, upload
 `loan_approval_dataset.csv` to `/content/`, and run all cells.
 
 Loan Approval Prediction Dataset (Kaggle): https://www.kaggle.com/datasets/architsharma01/loan-approval-prediction-dataset
+
+---
+
+## Task 4: Industrial Predictive Maintenance
+
+Predict machine failures from sensor readings on the AI4I 2020 Predictive Maintenance dataset (10,000 records, 3.39% failures), with a focus on a low False Discovery Rate (FDR = false alarms / all alarms).
+
+### What I did
+- Cleaned the data and built a `failure_type` label from the failure-mode flags
+- Explored sensor distributions, failure rate by product type and correlations
+- Engineered three features: temperature difference, mechanical power and tool wear x torque
+- Trained Logistic Regression, Random Forest and XGBoost with class weights (cost-sensitive learning)
+- Chose the decision threshold with 5-fold cross-validation on the training set (lowest FDR while keeping recall at or above 70%)
+- Evaluated once on the test set (68 failures) and compared with an Isolation Forest (anomaly detection)
+- Trained a multi-class model to predict the failure type
+
+### Results
+| Model | Setting | Precision | Recall | FDR | False alarms | Missed failures |
+|---|---|---|---|---|---|---|
+| Random Forest | Default (0.5) | 0.947 | 0.794 | 0.053 | 3 | 14 |
+| Random Forest | Tuned (0.613) | 0.961 | 0.721 | 0.039 | 2 | 19 |
+| XGBoost | Default (0.5) | 0.718 | 0.824 | 0.282 | 22 | 12 |
+| XGBoost | Tuned (0.969) | 0.939 | 0.676 | 0.061 | 3 | 22 |
+| Logistic Regression | Default (0.5) | 0.179 | 0.882 | 0.821 | 275 | 8 |
+| Logistic Regression | Tuned (0.703) | 0.292 | 0.794 | 0.708 | 131 | 14 |
+
+Isolation Forest (unsupervised): precision 0.123, recall 0.103, FDR 0.877.
+
+### Failure type classification
+| Failure type | F1 | FDR | Test samples |
+|---|---|---|---|
+| Heat Dissipation | 0.977 | 0.045 | 21 |
+| Overstrain | 0.970 | 0.059 | 16 |
+| Power | 0.968 | 0.000 | 16 |
+| Multiple failures | 0.800 | 0.200 | 5 |
+| Tool Wear | 0.000 | 1.000 | 8 |
+
+### Key findings
+- Random Forest had the lowest cross-validated FDR (0.020) and was selected as the best model.
+- Threshold tuning cut XGBoost's false alarms from 22 to 3. For Random Forest it removed only one false alarm and cost five missed failures, so the best threshold depends on the real cost of each error.
+- Logistic Regression and Isolation Forest produced too many false alarms to be useful.
+- Tool Wear failures were not detected by the failure type model (0 of 8), so overall accuracy (0.994) hides a macro F1 of 0.673.
+- Torque is the sensor most associated with failure (AUC 0.770), followed by rotational speed (0.767).
+
+### Limitations
+- The dataset is synthetic, and the test set has only 68 failures, so one false alarm changes the FDR by about 2 percentage points.
+- The costs used in the cost analysis (5,000 per false alarm, 20,000 per missed failure) are assumptions.
+- The sensor ranking shows association, not which sensor changes first before a failure, because there are no timestamps.
+
+### Bonus
+- **Sensor correlation analysis:** done (torque is the strongest single indicator).
+- **Time-to-Failure regression:** not done, because the dataset has no time-to-failure or remaining-useful-life column.
+
+### How to run
+Open `predictive_maintenance.ipynb` in Google Colab, upload the dataset CSV to `/content/` (the notebook reads `predictive_maintenance_datasets.csv`, which is `ai4i2020.csv` renamed), and run all cells.
+
+AI4I 2020 Predictive Maintenance Dataset (Kaggle): https://www.kaggle.com/datasets/stephanmatzka/predictive-maintenance-dataset-ai4i-2020
