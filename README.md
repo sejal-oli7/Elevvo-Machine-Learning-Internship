@@ -1,5 +1,16 @@
 # Elevvo Machine Learning Internship
 
+Four machine learning projects completed during my one-month internship at Elevvo.
+
+| Task | Project | Type | Notebook |
+|---|---|---|---|
+| Task 1 | Student Exam Score Prediction | Regression | [student_score_prediction.ipynb](student_score_prediction.ipynb) |
+| Task 2 | Customer Segmentation | Clustering | [customer_segmentation.ipynb](customer_segmentation.ipynb) |
+| Task 4 | Loan Approval Prediction | Binary classification | [Loan_Approval_Prediction.ipynb](Loan_Approval_Prediction.ipynb) |
+| Task 9 | Industrial Predictive Maintenance | Classification, anomaly detection | [predictive_maintenance.ipynb](predictive_maintenance.ipynb) |
+
+---
+
 ## Task 1: Student Exam Score Prediction
 
 Predict a student's exam score from study habits and background factors using the Student Performance Factors dataset (6,607 students, 20 columns).
@@ -80,7 +91,7 @@ Mall Customer Segmentation (Kaggle): https://www.kaggle.com/datasets/vjchoudhary
 
 ---
 
-## Task 3: Loan Approval Prediction
+## Task 4: Loan Approval Prediction
 
 Predict whether a loan application will be approved using the Loan Approval Prediction dataset (4,269 applications, 13 columns).
 
@@ -108,6 +119,7 @@ Approved: 62.2%, Rejected: 37.8%. Scores below are for the test set (854 rows).
 - The Decision Tree outperformed Logistic Regression on every metric.
 - The dataset has no missing values, so the imputers in the pipeline did not change any data.
 - The class imbalance is mild (62/38), so SMOTE had a small effect.
+- At least one residential asset value is negative (-100,000), which looks like a data entry error. It was not corrected.
 
 ### Bonus
 - **SMOTE and class weights:** For Logistic Regression they raised the recall of the Rejected class (0.867 to 0.923 and 0.929) at the cost of precision (0.903 to about 0.88). For the Decision Tree, SMOTE improved Macro F1 only slightly (0.967 to 0.969), which is too small to be conclusive on a single test split.
@@ -121,7 +133,7 @@ Loan Approval Prediction Dataset (Kaggle): https://www.kaggle.com/datasets/archi
 
 ---
 
-## Task 4: Industrial Predictive Maintenance
+## Task 9: Industrial Predictive Maintenance
 
 Predict machine failures from sensor readings on the AI4I 2020 Predictive Maintenance dataset (10,000 records, 3.39% failures), with a focus on a low False Discovery Rate (FDR = false alarms / all alarms).
 
@@ -153,13 +165,14 @@ Isolation Forest (unsupervised): precision 0.123, recall 0.103, FDR 0.877.
 | Overstrain | 0.970 | 0.059 | 16 |
 | Power | 0.968 | 0.000 | 16 |
 | Multiple failures | 0.800 | 0.200 | 5 |
-| Tool Wear | 0.000 | 1.000 | 8 |
+| Tool Wear | 0.000 | undefined (never predicted) | 8 |
 
 ### Key findings
 - Random Forest had the lowest cross-validated FDR (0.020) and was selected as the best model.
 - Threshold tuning cut XGBoost's false alarms from 22 to 3. For Random Forest it removed only one false alarm and cost five missed failures, so the best threshold depends on the real cost of each error.
 - Logistic Regression and Isolation Forest produced too many false alarms to be useful.
 - Tool Wear failures were not detected by the failure type model (0 of 8), so overall accuracy (0.994) hides a macro F1 of 0.673.
+- The failure type model never predicted Tool Wear, so its FDR is undefined. The numbers suggest all 8 test cases were labeled "No Failure" (check the confusion matrix).
 - Torque is the sensor most associated with failure (AUC 0.770), followed by rotational speed (0.767).
 
 ### Limitations
